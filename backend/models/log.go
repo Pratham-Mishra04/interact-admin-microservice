@@ -21,7 +21,7 @@ type Log struct {
 	Description string    `json:"description"`
 	Path        string    `json:"path"`
 	Resource    RESOURCE  `gorm:"index:idx_resource" json:"resource"`
-	Timestamp   time.Time `json:"timestamp" gorm:"index:idx_timestamp"`
+	Timestamp   time.Time `gorm:"default:current_timestamp;index:idx_created_at,sort:desc" json:"timestamp"`
 }
 
 type LogEntrySchema struct {
