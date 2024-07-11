@@ -53,7 +53,7 @@ const LogCard = ({ log, setLogs }: Props) => {
     <>
       {clickedOnDelete ? <ConfirmDelete handleDelete={handleDelete} setShow={setClickedOnDelete} /> : <></>}
       <div className="w-[95%] h-16 mx-auto border-b-[1px] border-gray-200 flex text-base text-gray-600">
-        <div className="w-1/12 flex-center max-md:hidden">{moment(log.timestamp).format('HH:MM:SS')}</div>
+        <div className="w-1/12 flex-center max-md:hidden">{moment(log.timestamp).format('HH:mm:ss')}</div>
         <div className="w-1/12 flex-center max-md:w-2/6 max-md:text-xs">
           {moment(log.timestamp).format('DD MMM YY')}
         </div>
