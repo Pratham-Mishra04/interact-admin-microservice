@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Loader from '@/components/loader';
 import SearchBar from '@/components/searchbar';
 import LogCard from '@/components/log_card';
@@ -16,6 +15,7 @@ import Cookies from 'js-cookie';
 import BaseWrapper from '@/wrappers/base';
 import MainWrapper from '@/wrappers/main';
 import Sidebar from '@/components/common/sidebar';
+import LogView from '@/components/log_view';
 
 const buildURL = (baseUrl: string, params: object) => {
   const queryString = Object.entries(params)
@@ -39,6 +39,8 @@ const Home = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const [clickedOnFilters, setClickedOnFilters] = useState(false);
+  const [clickedOnLog, setClickedOnLog] = useState(false);
+  const [clickedLog, setClickedLog] = useState<Log | null>(null);
 
   const router = useRouter();
 
@@ -89,6 +91,7 @@ const Home = () => {
             size={42}
             weight="duotone"
           />
+          {clickedLog && clickedOnLog && <LogView setShow={setClickedOnLog} log={clickedLog} />}
         </div>
         <div className="w-[95%] h-16 mx-auto border-b-[1px] border-gray-400 flex text-base font-semibold text-gray-500">
           <div className="w-1/12 flex-center max-md:hidden">Time</div>
@@ -115,7 +118,15 @@ const Home = () => {
             loader={<Loader />}
           >
             {logs.map(log => {
-              return <LogCard key={log.id} log={log} setLogs={setLogs} />;
+              return (
+                <LogCard
+                  key={log.id}
+                  log={log}
+                  setLogs={setLogs}
+                  setClickedLog={setClickedLog}
+                  setClickedOnLog={setClickedOnLog}
+                />
+              );
             })}
           </InfiniteScroll>
         )}

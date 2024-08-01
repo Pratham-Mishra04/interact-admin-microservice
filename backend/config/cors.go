@@ -20,6 +20,6 @@ func CORS() fiber.Handler {
 		AllowOrigins:     ALLOWED_ORIGINS,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowMethods:     "GET, POST, PATCH, DELETE",
-		AllowCredentials: false,
+		AllowCredentials: true,
 	})
 }

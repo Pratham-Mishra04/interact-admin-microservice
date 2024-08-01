@@ -9,6 +9,9 @@ import (
 )
 
 func genericSearch(db *gorm.DB, field, value string) *gorm.DB {
+	if value == "" {
+		return db
+	}
 	if field == "message" {
 		return db.Where("title ILIKE ?", "%"+value+"%").Or("description ILIKE ?", "%"+value+"%")
 	} else if value != "" {
