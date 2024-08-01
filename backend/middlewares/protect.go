@@ -135,7 +135,7 @@ func APIProtect(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
-		helpers.LogUnAuthorizedAccess(c)
+		helpers.LogUnAuthorizedAccess(c, err)
 		return err
 	}
 
@@ -154,7 +154,7 @@ func CheckOrigin(c *fiber.Ctx) error {
 	}
 
 	if !check {
-		helpers.LogUnAuthorizedAccess(c)
+		helpers.LogUnAuthorizedAccess(c, nil)
 		return &fiber.Error{Code: 403, Message: "Not Allowed to use this API."}
 	}
 
