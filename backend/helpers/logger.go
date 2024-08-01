@@ -13,11 +13,12 @@ func LogUnAuthorizedAccess(c *fiber.Ctx) {
 	method := c.Method()
 	url := c.OriginalURL()
 	apiToken := c.Get("api-token", "Not Provided")
+	origin := c.Get("Origin", "Not Provided")
 	clientIP := c.IP()
 
 	logDescription := fmt.Sprintf(
-		"Unauthorized Access Attempt\nMethod: %s\nURL: %s\nClient IP: %s\nAPI-Token: %s",
-		method, url, clientIP, apiToken,
+		"Unauthorized Access Attempt\nMethod: %s\nURL: %s\nOrigin: %s\nClient IP: %s\nAPI-Token: %s",
+		method, url, origin, clientIP, apiToken,
 	)
 
 	var log models.Log
