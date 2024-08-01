@@ -158,4 +158,19 @@ const SignUp = () => {
   );
 };
 
+export async function getServerSideProps() {
+  if (process.env.NODE_ENV != 'development') {
+    return {
+      redirect: {
+        permanent: true,
+        destination: '/login',
+      },
+      props: {},
+    };
+  } else
+    return {
+      props: {},
+    };
+}
+
 export default SignUp;

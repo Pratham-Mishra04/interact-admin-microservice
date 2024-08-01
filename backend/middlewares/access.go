@@ -34,6 +34,9 @@ func UserAuthorization(Role models.UserRole) func(*fiber.Ctx) error {
 	}
 }
 
-func LimitRoute(c *fiber.Ctx) error {
-	return &fiber.Error{Code: 403, Message: "Not Accepting Users."}
+func BlockProd(c *fiber.Ctx) error {
+	if initializers.CONFIG.ENV != initializers.DevelopmentEnv {
+		return &fiber.Error{Code: 403, Message: "This route is blocked."}
+	}
+	return c.Next()
 }

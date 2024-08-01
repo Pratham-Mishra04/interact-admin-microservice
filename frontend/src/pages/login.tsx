@@ -3,7 +3,6 @@ import { User } from '@/types';
 import Toaster from '@/utils/toaster';
 import { ArrowRight, Eye, EyeClosed } from '@phosphor-icons/react';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
@@ -14,8 +13,6 @@ const Login = () => {
   const [mutex, setMutex] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const router = useRouter();
 
   const handleSubmit = async (el: React.FormEvent<HTMLFormElement>) => {
     el.preventDefault();
@@ -41,7 +38,7 @@ const Login = () => {
           Cookies.set('id', user.id, {
             expires: Number(process.env.NEXT_PUBLIC_COOKIE_EXPIRATION_TIME),
           });
-          router.push('/');
+          window.location.replace('/');
         } else {
           if (res.data.message) Toaster.stopLoad(toaster, res.data.message, 0);
           else Toaster.stopLoad(toaster, 'Internal Server Error', 0);
@@ -124,9 +121,11 @@ const Login = () => {
                 <div> Continue</div>
                 <ArrowRight size={20} weight="regular" />
               </button>
-              <div onClick={() => router.push('/signup')} className="text-gray-400 text-sm cursor-pointer">
-                Don&apos;t have an Account? <span className="font-medium underline underline-offset-2">Sign Up</span>
-              </div>
+              {process.env.NODE_ENV == 'development' && (
+                <div onClick={() => window.location.assign('/signup')} className="text-gray-400 text-sm cursor-pointer">
+                  Don&apos;t have an Account? <span className="font-medium underline underline-offset-2">Sign Up</span>
+                </div>
+              )}
             </div>
           </form>
         </div>
