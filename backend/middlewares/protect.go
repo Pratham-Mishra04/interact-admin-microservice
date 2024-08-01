@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Pratham-Mishra04/interact-admin-microservice/config"
+	"github.com/Pratham-Mishra04/interact-admin-microservice/helpers"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/initializers"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/models"
 	"github.com/gofiber/fiber/v2"
@@ -134,7 +135,27 @@ func APIProtect(c *fiber.Ctx) error {
 	}
 
 	if err != nil {
+		helpers.LogUnAuthorizedAccess(c)
 		return err
+	}
+
+	return c.Next()
+}
+
+func CheckOrigin(c *fiber.Ctx) error {
+	origin := c.Get("Origin", "")
+
+	check := false
+	for _, o := range initializers.CONFIG.ALLOWED_ORIGINS {
+		if o == origin {
+			check = true
+			break
+		}
+	}
+
+	if !check {
+		helpers.LogUnAuthorizedAccess(c)
+		return &fiber.Error{Code: 403, Message: "Not Allowed to use this API."}
 	}
 
 	return c.Next()
