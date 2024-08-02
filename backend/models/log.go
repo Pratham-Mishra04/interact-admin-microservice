@@ -9,7 +9,7 @@ type RESOURCE string
 const (
 	BACKEND RESOURCE = "backend"
 	ML      RESOURCE = "ml"
-	SOCKETS RESOURCE = "ws"
+	SOCKETS RESOURCE = "sockets"
 	MAILER  RESOURCE = "mailer"
 	ADMIN   RESOURCE = "admin"
 )
