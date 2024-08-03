@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Pratham-Mishra04/interact-admin-microservice/config"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/initializers"
@@ -18,13 +19,14 @@ func LogUnAuthorizedAccess(c *fiber.Ctx, err error) {
 	url := c.OriginalURL()
 	apiToken := c.Get("api-token", "Not Provided")
 	origin := c.Get("Origin", "Not Provided")
-	clientIP := c.IP()
+	clientIP := getClientIP(c)
+	proxyChain := c.Get("X-Forwarded-For", "Not Provided")
 	headers := c.GetReqHeaders()
 	errorDescription := err.Error()
 
 	logDescription := fmt.Sprintf(
-		"Unauthorized Access Attempt\nMethod: %s\nURL: %s\nOrigin: %s\nClient IP: %s\nAPI-Token: %s\nHeaders: %v\nError: %s",
-		method, url, origin, clientIP, apiToken, headers, errorDescription,
+		"Unauthorized Access Attempt\nMethod: %s\nURL: %s\nOrigin: %s\nClient IP: %s\nProxy Chain: %v\nAPI-Token: %s\nHeaders: %v\nError: %s",
+		method, url, origin, clientIP, proxyChain, apiToken, headers, errorDescription,
 	)
 
 	var log models.Log
@@ -39,4 +41,15 @@ func LogUnAuthorizedAccess(c *fiber.Ctx, err error) {
 	if result.Error != nil {
 		config.Logger.Errorw("Error while adding a log", "Error:", result.Error)
 	}
+}
+
+func getClientIP(c *fiber.Ctx) string {
+	if ip := c.Get("X-Forwarded-For"); ip != "" {
+		ips := strings.Split(ip, ",")
+		return strings.TrimSpace(ips[0])
+	}
+	if ip := c.Get("X-Real-IP"); ip != "" {
+		return ip
+	}
+	return c.IP()
 }
