@@ -154,7 +154,7 @@ func CheckOrigin(c *fiber.Ctx) error {
 	}
 
 	if !check {
-		helpers.LogUnAuthorizedAccess(c, nil)
+		// helpers.LogUnAuthorizedAccess(c, nil)
 		return &fiber.Error{Code: 403, Message: "Not Allowed to use this API."}
 	}
 

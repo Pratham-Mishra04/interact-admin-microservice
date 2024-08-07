@@ -180,10 +180,7 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(comment.User.Email, 70, &comment.User, "comment", comment)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(comment.User.Email, 70, &comment.User, "comment", comment)
 
 		case "post":
 			var post models.Post
@@ -200,10 +197,7 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(post.User.Email, 71, &post.User, "post", post)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(post.User.Email, 71, &post.User, "post", post)
 
 		case "user":
 			var user models.User
@@ -241,10 +235,7 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(project.User.Email, 72, &project.User, "project", project)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(project.User.Email, 72, &project.User, "project", project)
 
 		case "event":
 			var event models.Event
@@ -261,10 +252,7 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(event.Organization.User.Email, 74, &event.Organization.User, "event", event)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(event.Organization.User.Email, 74, &event.Organization.User, "event", event)
 
 		case "opening":
 			var opening models.Opening
@@ -281,10 +269,7 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(opening.User.Email, 73, &opening.User, "opening", opening)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(opening.User.Email, 73, &opening.User, "opening", opening)
 
 		case "announcement":
 			var announcement models.Announcement
@@ -301,10 +286,7 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(announcement.Organization.User.Email, 75, &announcement.Organization.User, "announcement", announcement)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(announcement.Organization.User.Email, 75, &announcement.Organization.User, "announcement", announcement)
 
 		case "poll":
 			var poll models.Poll
@@ -321,13 +303,8 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
 			}
 
-			err = helpers.SendMailReq(poll.Organization.User.Email, 76, &poll.Organization.User, "poll", poll)
-			if err != nil {
-				return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-			}
+			go helpers.SendMailReq(poll.Organization.User.Email, 76, &poll.Organization.User, "poll", poll)
 		}
-
-		//TODO removed from flag email
 
 		return c.Status(200).JSON(fiber.Map{
 			"status":  "success",
