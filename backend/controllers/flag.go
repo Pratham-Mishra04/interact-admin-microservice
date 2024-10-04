@@ -335,3 +335,92 @@ func RemoveFlag(itemType string) func(c *fiber.Ctx) error {
 		})
 	}
 }
+
+func DeleteFlaggedItems(itemType string) func (c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		parsedItemID, err := uuid.Parse(c.Params("itemID"))
+		if err != nil {
+			return &fiber.Error{Code: 400, Message: "Invalid ID"}
+		}
+
+		switch itemType {
+		case "comment":
+			var comment models.Comment
+			if err := initializers.DB.First(&comment, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Comment of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+
+		case "post":
+			var post models.Post
+			if err := initializers.DB.First(&post, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Post of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+
+		case "user":
+			var user models.User
+			if err := initializers.DB.First(&user, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No User of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+		
+		case "project":
+			var project models.Project
+			if err := initializers.DB.First(&project, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Project of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+		
+		case "event":
+			var event models.Event
+			if err := initializers.DB.First(&event, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Event of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+		
+		case "opening":
+			var opening models.Opening
+			if err := initializers.DB.First(&opening, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Opening of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+		
+		case "announcement":
+			var announcement models.Announcement
+			if err := initializers.DB.First(&announcement, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Announcement of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+		
+		case "poll":
+			var poll models.Poll
+			if err := initializers.DB.First(&poll, "id = ?", parsedItemID).Error; err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return &fiber.Error{Code: 400, Message: "No Poll of this ID found."}
+				}
+				return &fiber.Error{Code: 400, Message: config.DATABASE_ERROR}
+			}
+
+		}
+		
+		return c.Status(200).JSON(fiber.Map{
+			"status": "success",
+			"message": "Flagged item deleted",
+		})
+	}
+}
