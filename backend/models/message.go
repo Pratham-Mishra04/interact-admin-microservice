@@ -1,0 +1,38 @@
+package models
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type Message struct {
+	ID             uuid.UUID    `gorm:"type:uuid;default:uuid_generate_v4();primary_key" json:"id"`
+	ChatID         uuid.UUID    `gorm:"type:uuid;not null" json:"chatID"`
+	UserID         uuid.UUID    `gorm:"type:uuid;not null" json:"userID"`
+	User           User         `gorm:"" json:"user"`
+	PostID         *uuid.UUID   `gorm:"type:uuid" json:"postID"` // shared post
+	Post           Post         `json:"post"`
+	ProjectID      *uuid.UUID   `gorm:"type:uuid" json:"projectID"` // shared project
+	Project        Project      `json:"project"`
+	OpeningID      *uuid.UUID   `gorm:"type:uuid" json:"openingID"` // shared opening
+	Opening        Opening      `json:"opening"`
+	ProfileID      *uuid.UUID   `gorm:"type:uuid" json:"profileID"` // shared profile
+	Profile        User         `gorm:"" json:"profile"`
+	EventID        *uuid.UUID   `gorm:"type:uuid" json:"eventID"` // shared event
+	Event          Event        `gorm:"" json:"event"`
+	AnnouncementID *uuid.UUID   `gorm:"type:uuid" json:"announcementID"` // shared announcement
+	Announcement   Announcement `gorm:"" json:"announcement"`
+	// MessageID *uuid.UUID `gorm:"type:uuid" json:"messageID"` // replied message
+	// Message   Message    `json:"message"`
+	Content   string              `gorm:"type:text;not null" json:"content"`
+	CreatedAt time.Time           `gorm:"default:current_timestamp;index:idx_created_at,sort:desc" json:"createdAt"`
+	ReadBy    []MessageReadStatus `gorm:"foreignKey:MessageID;constraint:OnDelete:CASCADE" json:"readBy"`
+}
+
+type MessageReadStatus struct {
+	MessageID uuid.UUID `gorm:"type:uuid;not null" json:"messageID"`
+	UserID    uuid.UUID `gorm:"type:uuid;not null" json:"userID"`
+	User      User      `gorm:"" json:"user"`
+	ReadAt    time.Time `gorm:"default:current_timestamp" json:"readAt"`
+}
