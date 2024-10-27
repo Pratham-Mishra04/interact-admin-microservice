@@ -7,11 +7,12 @@ import (
 type RESOURCE string
 
 const (
-	BACKEND RESOURCE = "backend"
-	ML      RESOURCE = "ml"
-	SOCKETS RESOURCE = "sockets"
-	MAILER  RESOURCE = "mailer"
-	ADMIN   RESOURCE = "admin"
+	BACKEND         RESOURCE = "backend"
+	BACKEND_STAGING RESOURCE = "backend_staging"
+	ML              RESOURCE = "ml"
+	SOCKETS         RESOURCE = "sockets"
+	MAILER          RESOURCE = "mailer"
+	ADMIN           RESOURCE = "admin"
 )
 
 type Log struct {

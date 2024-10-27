@@ -118,6 +118,10 @@ func APIProtect(c *fiber.Ctx) error {
 		err = verifyAPIToken(jwtString, initializers.CONFIG.BACKEND_SECRET, models.BACKEND)
 		c.Set("Resource", string(models.BACKEND))
 
+	case initializers.CONFIG.BACKEND_STAGING_TOKEN:
+		err = verifyAPIToken(jwtString, initializers.CONFIG.BACKEND_SECRET, models.BACKEND_STAGING)
+		c.Set("Resource", string(models.BACKEND_STAGING))
+
 	case initializers.CONFIG.ML_TOKEN:
 		err = verifyAPIToken(jwtString, initializers.CONFIG.ML_SECRET, models.ML)
 		c.Set("Resource", string(models.ML))

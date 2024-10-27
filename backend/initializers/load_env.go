@@ -16,31 +16,32 @@ const (
 )
 
 type Config struct {
-	PORT            string      `mapstructure:"PORT"`
-	ENV             Environment `mapstructure:"ENV"`
-	DB_HOST         string      `mapstructure:"DB_HOST"`
-	DB_PORT         string      `mapstructure:"DB_PORT"`
-	DB_NAME         string      `mapstructure:"DB_NAME"`
-	DB_USER         string      `mapstructure:"DB_USER"`
-	DB_PASSWORD     string      `mapstructure:"DB_PASSWORD"`
-	REDIS_HOST      string      `mapstructure:"REDIS_HOST"`
-	REDIS_PORT      string      `mapstructure:"REDIS_PORT"`
-	REDIS_PASSWORD  string      `mapstructure:"REDIS_PASSWORD"`
-	JWT_SECRET      string      `mapstructure:"JWT_SECRET"`
-	BACKEND_SECRET  string      `mapstructure:"BACKEND_SECRET"`
-	ML_SECRET       string      `mapstructure:"ML_SECRET"`
-	SOCKETS_SECRET  string      `mapstructure:"SOCKETS_SECRET"`
-	MAILER_SECRET   string      `mapstructure:"MAILER_SECRET"`
-	BACKEND_TOKEN   string      `mapstructure:"BACKEND_TOKEN"`
-	ML_TOKEN        string      `mapstructure:"ML_TOKEN"`
-	SOCKETS_TOKEN   string      `mapstructure:"SOCKETS_TOKEN"`
-	MAILER_TOKEN    string      `mapstructure:"MAILER_TOKEN"`
-	FRONTEND_URL    string      `mapstructure:"FRONTEND_URL"`
-	BACKEND_URL     string      `mapstructure:"BACKEND_URL"`
-	MAILER_URL      string      `mapstructure:"MAILER_URL"`
-	ML_URL          string      `mapstructure:"ML_URL"`
-	WS_URL          string      `mapstructure:"WS_URL"`
-	ALLOWED_ORIGINS []string    ``
+	PORT                  string      `mapstructure:"PORT"`
+	ENV                   Environment `mapstructure:"ENV"`
+	DB_HOST               string      `mapstructure:"DB_HOST"`
+	DB_PORT               string      `mapstructure:"DB_PORT"`
+	DB_NAME               string      `mapstructure:"DB_NAME"`
+	DB_USER               string      `mapstructure:"DB_USER"`
+	DB_PASSWORD           string      `mapstructure:"DB_PASSWORD"`
+	REDIS_HOST            string      `mapstructure:"REDIS_HOST"`
+	REDIS_PORT            string      `mapstructure:"REDIS_PORT"`
+	REDIS_PASSWORD        string      `mapstructure:"REDIS_PASSWORD"`
+	JWT_SECRET            string      `mapstructure:"JWT_SECRET"`
+	BACKEND_SECRET        string      `mapstructure:"BACKEND_SECRET"`
+	ML_SECRET             string      `mapstructure:"ML_SECRET"`
+	SOCKETS_SECRET        string      `mapstructure:"SOCKETS_SECRET"`
+	MAILER_SECRET         string      `mapstructure:"MAILER_SECRET"`
+	BACKEND_TOKEN         string      `mapstructure:"BACKEND_TOKEN"`
+	BACKEND_STAGING_TOKEN string      `mapstructure:"BACKEND_STAGING_TOKEN"`
+	ML_TOKEN              string      `mapstructure:"ML_TOKEN"`
+	SOCKETS_TOKEN         string      `mapstructure:"SOCKETS_TOKEN"`
+	MAILER_TOKEN          string      `mapstructure:"MAILER_TOKEN"`
+	FRONTEND_URL          string      `mapstructure:"FRONTEND_URL"`
+	BACKEND_URL           string      `mapstructure:"BACKEND_URL"`
+	MAILER_URL            string      `mapstructure:"MAILER_URL"`
+	ML_URL                string      `mapstructure:"ML_URL"`
+	WS_URL                string      `mapstructure:"WS_URL"`
+	ALLOWED_ORIGINS       []string    ``
 }
 
 var CONFIG Config
