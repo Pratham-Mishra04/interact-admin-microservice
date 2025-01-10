@@ -1,5 +1,6 @@
 import Toaster from '@/utils/toaster';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { CacheAxiosResponse, setupCache } from 'axios-cache-interceptor';
 import Cookies from 'js-cookie';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -15,9 +16,11 @@ interface RefreshError extends Omit<AxiosError, 'response'> {
   response?: AxiosResponse<{ message: string }>;
 }
 
-const configuredAxios = axios.create({
-  baseURL: BACKEND_URL,
-});
+const configuredAxios = setupCache(
+  axios.create({
+    baseURL: BACKEND_URL,
+  })
+);
 
 let isRefreshing = false; // Flag to track if a refresh request is ongoing
 let refreshSubscribers: ((token: string) => void)[] = []; // Array to hold the pending requests while token is being refreshed
@@ -48,7 +51,7 @@ configuredAxios.interceptors.request.use(
 );
 
 configuredAxios.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: CacheAxiosResponse) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as MyAxiosRequestConfig;
 

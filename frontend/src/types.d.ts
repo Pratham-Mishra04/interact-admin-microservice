@@ -53,6 +53,7 @@ export interface User {
   resume: string;
   active: boolean;
   profilePic: string;
+  profilePicBlurHash: string;
   coverPic: string;
   username: string;
   phoneNo: string;
@@ -84,8 +85,8 @@ export interface Project {
   userID: string;
   title: string;
   tagline: string;
-  coverPic: string;
-  blurHash: string;
+  images: string[];
+  hashes: string[];
   description: string;
   page: string;
   user: User;
@@ -168,5 +169,68 @@ export interface Poll {
   isMultiAnswer: boolean;
   isOpen: boolean;
   totalVotes: number;
+  createdAt: Date;
+}
+
+export interface Event {
+  id: string;
+  organizationID: string;
+  organization: Organization;
+  coHosts: Organization[];
+  title: string;
+  tagline: string;
+  description: string;
+  tags: string[];
+  links: string[];
+  coordinators: User[];
+  startTime: Date;
+  endTime: Date;
+  location: string;
+  category: string;
+  coverPic: string;
+  blurHash: string;
+  noLikes: number;
+  noShares: number;
+  noComments: number;
+  noImpressions: number;
+  noViews: number;
+  meetingID: string;
+  meeting: Meeting | null;
+  hackathonID: string;
+  hackathon: Hackathon | null;
+  createdAt: Date;
+  userID: string; //Dummy for type fixes in comment_box
+}
+
+export interface Community {
+  id: string;
+  title: string;
+  description?: string;
+  tagline: string;
+  userID: string;
+  user: User;
+  profilePic: string;
+  profilePicBlurHash: string;
+  coverPic: string;
+  coverPicBlurHash: string;
+  tags: string[];
+  links: string[];
+  category: string;
+  isOpen: boolean;
+  noViews: number;
+  impressions: number;
+  noLikes: number;
+  noMembers: number;
+  createdAt: Date;
+}
+
+export interface Organization {
+  id: string;
+  userID: string;
+  user: User;
+  title: string;
+  noMembers: number;
+  noEvents: number;
+  noProjects: number;
   createdAt: Date;
 }
