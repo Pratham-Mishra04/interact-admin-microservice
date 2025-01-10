@@ -1,5 +1,5 @@
 import { SERVER_ERROR } from '@/config/errors';
-import { EXPLORE_URL } from '@/config/routes';
+import { MAIN_EXPLORE_URL } from '@/config/routes';
 import getHandler from '@/handlers/get_handler';
 import { Community, Event, Opening, Organization, Project, User } from '@/types';
 import Toaster from '@/utils/toaster';
@@ -21,7 +21,7 @@ export default {
   //TODO: pass query in props and make request in the comp
   items: ({ query }: { query: string }) => {
     const fetchUsers = async (search: string) => {
-      const URL = `${EXPLORE_URL}/quick?search=${search}&limit=${5}`;
+      const URL = `${MAIN_EXPLORE_URL}/quick?search=${search}&limit=${5}`;
       const res = await getHandler(URL, undefined, true);
       if (res.statusCode == 200) {
         const response: FetchResponse = res.data;

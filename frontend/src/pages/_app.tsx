@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { store, persistor } from '@/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import ThemeProvider from '@/components/ui/theme-provider';
+// import ThemeProvider from '@/components/ui/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 
 const inter = Inter({
