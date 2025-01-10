@@ -8,4 +8,5 @@ func Config(app *fiber.App) {
 	AuthRouter(app)
 	LogRouter(app)
 	FlagRouter(app)
+	SuperuserRouter(app)
 }

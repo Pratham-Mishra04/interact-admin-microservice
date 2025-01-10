@@ -2,6 +2,7 @@ import Toaster from '@/utils/toaster';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CacheAxiosResponse, setupCache } from 'axios-cache-interceptor';
 import Cookies from 'js-cookie';
+import { MAIN_BACKEND } from './routes';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const FRONTEND_URL = process.env.NEXT_PUBLIC_FRONTEND_URL;
@@ -37,10 +38,12 @@ function onTokenRefreshed(newToken: string) {
 
 configuredAxios.interceptors.request.use(
   config => {
-    const token = Cookies.get('token');
+    if (!config.url?.startsWith(MAIN_BACKEND as string)) {
+      const token = Cookies.get('token');
 
-    if (token && token !== '') {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      if (token && token !== '') {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
     }
 
     return config;

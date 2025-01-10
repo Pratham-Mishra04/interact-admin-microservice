@@ -4,7 +4,7 @@ import moment from 'moment';
 import { X } from '@phosphor-icons/react';
 import Toaster from '@/utils/toaster';
 import deleteHandler from '@/handlers/delete_handler';
-import ConfirmDelete from './confirm_delete';
+import ConfirmDelete from './common/confirm_delete';
 import Cookies from 'js-cookie';
 import { getLogColor } from '@/utils/log';
 

@@ -10,6 +10,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func LogServerError(title string, err error, path string) {
+	if err == nil {
+		err = fmt.Errorf("no error message provided")
+	}
+
+	var log models.Log
+
+	log.Level = "error"
+	log.Title = title
+	log.Description = err.Error()
+	log.Path = path
+	log.Resource = "admin_backend"
+
+	result := initializers.DB.Create(&log)
+	if result.Error != nil {
+		config.Logger.Errorw("Error while adding a log", "Error:", result.Error)
+	}
+}
+
 func LogUnAuthorizedAccess(c *fiber.Ctx, err error) {
 	if err == nil {
 		err = fmt.Errorf("no access error, request was blocked")

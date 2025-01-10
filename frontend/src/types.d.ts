@@ -41,6 +41,7 @@ export interface Post {
   hashes: string[];
   isEdited: boolean;
   taggedUsers: User[];
+  isFlagged: boolean;
 }
 
 export interface User {

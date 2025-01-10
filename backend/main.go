@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Pratham-Mishra04/interact-admin-microservice/config"
+	"github.com/Pratham-Mishra04/interact-admin-microservice/helpers"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/initializers"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/middlewares"
 
@@ -25,7 +26,7 @@ func init() {
 func main() {
 	defer config.LoggerCleanUp()
 	app := fiber.New(fiber.Config{
-		ErrorHandler: fiber.DefaultErrorHandler,
+		ErrorHandler: helpers.ErrorHandler,
 	})
 
 	app.Use(helmet.New())

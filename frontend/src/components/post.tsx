@@ -5,7 +5,6 @@ import { USER_PROFILE_PIC_URL, POST_PIC_URL, POST_URL } from '@/config/routes';
 import moment from 'moment';
 import { CarouselProvider, Slider, Slide, Dot } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-import Link from 'next/link';
 import { userSelector } from '@/slices/userSlice';
 import { useSelector } from 'react-redux';
 import deleteHandler from '@/handlers/delete_handler';
@@ -28,7 +27,6 @@ interface Props {
 }
 
 const PostComponent = ({ post, isRepost = false, setPosts, clamp = false }: Props) => {
-  const loggedInUser = useSelector(userSelector);
   const [clickedOnEdit, setClickedOnEdit] = useState(false);
   const [clickedOnDelete, setClickedOnDelete] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -37,7 +35,7 @@ const PostComponent = ({ post, isRepost = false, setPosts, clamp = false }: Prop
 
   const user = useSelector(userSelector);
 
-  const removeFlag = () => {
+  const handleRemoveFlag = () => {
     const toaster = Toaster.startLoad('Removing Flag', post.id);
     const URL = `/flags/posts/${post.id}`;
     postHandler(URL, {})
@@ -114,10 +112,7 @@ const PostComponent = ({ post, isRepost = false, setPosts, clamp = false }: Prop
     >
       {clickedOnDelete && <ConfirmDelete setShow={setClickedOnDelete} handleDelete={handleDelete} />}
       <div className="h-full">
-        <Link
-          href={`/users/${post.user.isOrganization ? 'organisations/' : ''}${post.user.username}`}
-          className="rounded-full"
-        >
+        <div className="rounded-full">
           <Image
             crossOrigin="anonymous"
             width={100}
@@ -128,18 +123,15 @@ const PostComponent = ({ post, isRepost = false, setPosts, clamp = false }: Prop
             blurDataURL={post.user.profilePicBlurHash || 'no-hash'}
             className="rounded-full w-8 h-8"
           />
-        </Link>
+        </div>
       </div>
       <div className="w-[calc(100%-32px)] flex flex-col gap-1">
         <div className="w-full h-fit flex justify-between">
-          <Link
-            href={`/${post.user.isOrganization ? 'organisations' : 'users'}/${post.user.username}`}
-            className="font-medium flex items-center gap-1"
-          >
+          <div className="font-medium flex items-center gap-1">
             {post.user.name}
             {post.user.isOrganization ? <Buildings weight="duotone" /> : <></>}
             <div className="text-xs font-normal text-gray-500">@{post.user.username}</div>
-          </Link>
+          </div>
           <div className="flex-center gap-2 text-xs text-gray-400">
             {post.isEdited && <div>(edited)</div>}
             <div>{moment(post.postedAt).fromNow()}</div>
@@ -161,6 +153,19 @@ const PostComponent = ({ post, isRepost = false, setPosts, clamp = false }: Prop
                   >
                     Edit
                   </div>
+                  {post.isFlagged && (
+                    //TODO handle toggle flagging
+                    <div
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleRemoveFlag();
+                        setIsDialogOpen(false);
+                      }}
+                      className="w-full px-4 py-2 max-md:p-1 max-md:text-center hover:bg-primary_comp dark:hover:bg-dark_primary_comp_hover rounded-lg cursor-pointer transition-ease-300"
+                    >
+                      UnFlag
+                    </div>
+                  )}
                   <div
                     onClick={el => {
                       el.stopPropagation();

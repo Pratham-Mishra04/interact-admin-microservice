@@ -51,7 +51,7 @@ import {
 type EditorProps =
   | {
       editable: true;
-      setContent: React.Dispatch<React.SetStateAction<string>>;
+      setContent: (val: string) => void;
       content?: string;
       placeholder?: string;
       limit?: number | null;
@@ -237,7 +237,7 @@ const Editor = ({
   );
 
   return (
-    <div className="flex flex-col justify-stretch">
+    <div className="flex flex-col justify-stretch px-2">
       {editor && editable && (
         <BubbleMenu
           className="w-fit h-fit flex-center gap-1 editor-bubble-menu bg-gray-200 dark:bg-neutral-800 rounded-sm shadow-md p-1"
