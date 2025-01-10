@@ -8,12 +8,6 @@ export interface Log {
   timestamp: Date;
 }
 
-export interface LogUser {
-  id: string;
-  username: string;
-  role: string;
-}
-
 export interface Comment {
   id: string;
   userID: string;
@@ -80,6 +74,8 @@ export interface User {
   lastViewed: Project[];
   isVerified: boolean;
   isOrganization: boolean;
+  admin: boolean;
+  superAdmin: boolean;
 }
 
 export interface Project {

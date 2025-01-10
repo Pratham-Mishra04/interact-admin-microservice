@@ -6,6 +6,8 @@ import Cookies from 'js-cookie';
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/slices/userSlice';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -13,6 +15,8 @@ const Login = () => {
   const [mutex, setMutex] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (el: React.FormEvent<HTMLFormElement>) => {
     el.preventDefault();
@@ -32,6 +36,8 @@ const Login = () => {
         if (res.status === 200) {
           Toaster.stopLoad(toaster, 'Logged In!', 1);
           const user: User = res.data.user;
+          dispatch(setUser(user));
+
           Cookies.set('token', res.data.token, {
             expires: Number(process.env.NEXT_PUBLIC_COOKIE_EXPIRATION_TIME),
           });

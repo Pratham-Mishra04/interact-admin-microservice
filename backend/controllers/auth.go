@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateSendToken(c *fiber.Ctx, user models.LogUser, statusCode int, message string) error {
+func CreateSendToken(c *fiber.Ctx, user models.User, statusCode int, message string) error {
 	access_token_claim := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.ID,
 		"crt": time.Now().Unix(),
@@ -55,44 +55,6 @@ func CreateSendToken(c *fiber.Ctx, user models.LogUser, statusCode int, message 
 	})
 }
 
-func SignUp(c *fiber.Ctx) error {
-	var reqBody models.UserCreateSchema
-
-	if err := c.BodyParser(&reqBody); err != nil {
-		return &fiber.Error{Code: 400, Message: "Invalid Req Body"}
-	}
-
-	if reqBody.Password != reqBody.ConfirmPassword {
-		return &fiber.Error{Code: 400, Message: "Passwords do not match."}
-	}
-
-	var user models.LogUser
-	initializers.DB.First(&user, "username = ?", reqBody.Username)
-	if user.ID != 0 {
-		return &fiber.Error{Code: 400, Message: "User with this Username already exists"}
-	}
-
-	hash, err := bcrypt.GenerateFromPassword([]byte(reqBody.Password), 12)
-	if err != nil {
-		go config.Logger.Errorw("Error while hashing Password.", "Error:", err)
-		return &fiber.Error{Code: 500, Message: config.SERVER_ERROR}
-	}
-
-	newUser := models.LogUser{
-		Password: string(hash),
-		Username: reqBody.Username,
-		Role:     reqBody.Role,
-	}
-
-	result := initializers.DB.Create(&newUser)
-	if result.Error != nil {
-		go config.Logger.Errorw("Error while adding a user", "Error:", result.Error)
-		return &fiber.Error{Code: 500, Message: config.DATABASE_ERROR}
-	} else {
-		return CreateSendToken(c, newUser, 201, "Account Created")
-	}
-}
-
 func LogIn(c *fiber.Ctx) error {
 	var reqBody struct {
 		Username string `json:"username"`
@@ -103,8 +65,8 @@ func LogIn(c *fiber.Ctx) error {
 		return &fiber.Error{Code: 400, Message: "Validation Failed"}
 	}
 
-	var user models.LogUser
-	if err := initializers.DB.First(&user, "username = ? ", reqBody.Username).Error; err != nil {
+	var user models.User
+	if err := initializers.DB.First(&user, "username = ? AND admin = true", reqBody.Username).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return &fiber.Error{Code: 400, Message: "No account with these credentials found."}
 		} else {
@@ -149,15 +111,10 @@ func Refresh(c *fiber.Ctx) error {
 			return &fiber.Error{Code: 401, Message: "Invalid user ID in token claims."}
 		}
 
-		var user models.LogUser
-		err := initializers.DB.First(&user, "id = ?", access_token_userID).Error
-		if err != nil {
+		var user models.User
+		if err := initializers.DB.First(&user, "id = ?", access_token_userID).Error; err != nil {
 			go config.Logger.Warn("Error while fetching user for token refreshing", "Error:", err)
 			return &fiber.Error{Code: 500, Message: config.DATABASE_ERROR}
-		}
-
-		if user.ID == 0 {
-			return &fiber.Error{Code: 401, Message: "User of this token no longer exists"}
 		}
 
 		refresh_token_string := c.Cookies("refresh_token")

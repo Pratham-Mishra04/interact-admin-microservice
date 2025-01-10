@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func verifyUserToken(tokenString string, user *models.LogUser) error {
+func verifyUserToken(tokenString string, user *models.User) error {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -36,7 +36,7 @@ func verifyUserToken(tokenString string, user *models.LogUser) error {
 			return &fiber.Error{Code: 401, Message: "Invalid user ID in token claims."}
 		}
 
-		if err := initializers.DB.First(user, "id = ?", userID).Error; err != nil {
+		if err := initializers.DB.First(user, "id = ? AND admin = true", userID).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				return &fiber.Error{Code: 401, Message: "User of this token no longer exists"}
 			}
@@ -75,26 +75,32 @@ func verifyAPIToken(tokenString string, SECRET string, resource models.RESOURCE)
 	}
 }
 
-func Protect(c *fiber.Ctx) error {
-	authHeader := c.Get("Authorization")
-	tokenArr := strings.Split(authHeader, " ")
+func Protect(superAdminOnly bool) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		authHeader := c.Get("Authorization")
+		tokenArr := strings.Split(authHeader, " ")
 
-	if len(tokenArr) != 2 {
-		return &fiber.Error{Code: 401, Message: "You are Not Logged In."}
+		if len(tokenArr) != 2 {
+			return &fiber.Error{Code: 401, Message: "You are Not Logged In."}
+		}
+
+		tokenString := tokenArr[1]
+
+		var user models.User
+		err := verifyUserToken(tokenString, &user)
+		if err != nil {
+			return err
+		}
+
+		if superAdminOnly && !user.SuperAdmin {
+			return &fiber.Error{Code: 403, Message: "You are not authorized to access this route."}
+		}
+
+		c.Set("loggedInUserID", fmt.Sprint(user.ID))
+		c.Set("Resource", string(models.ADMIN))
+
+		return c.Next()
 	}
-
-	tokenString := tokenArr[1]
-
-	var user models.LogUser
-	err := verifyUserToken(tokenString, &user)
-	if err != nil {
-		return err
-	}
-
-	c.Set("loggedInUserID", fmt.Sprint(user.ID))
-	c.Set("Resource", string(models.ADMIN))
-
-	return c.Next()
 }
 
 func APIProtect(c *fiber.Ctx) error {
