@@ -12,11 +12,14 @@ import {
   Ticket,
   UserCircle,
   WarningCircle,
-  ChatCircle
+  ChatCircle,
+  UserCircleGear,
 } from '@phosphor-icons/react';
 import Cookies from 'js-cookie';
 import Toaster from '@/utils/toaster';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { userSelector } from '@/slices/userSlice';
 
 interface Props {
   index: number;
@@ -24,6 +27,8 @@ interface Props {
 
 const Sidebar = ({ index }: Props) => {
   const [active, setActive] = useState(index);
+
+  const user = useSelector(userSelector);
 
   const router = useRouter();
 
@@ -34,7 +39,7 @@ const Sidebar = ({ index }: Props) => {
     Toaster.success('Logged Out');
   };
   return (
-    <div className="w-sidebar h-base bg-sidebar border-gray-300 border-r-[1px] dark:border-0 dark:bg-dark_sidebar backdrop-blur-sm pt-[40px] fixed mt-navbar py-6 flex flex-col justify-between pl-[30px] transition-ease-out-500 max-lg:hidden">
+    <div className="w-sidebar_open h-base bg-sidebar border-gray-300 border-r-[1px] dark:border-0 dark:bg-dark_sidebar backdrop-blur-sm pt-[40px] fixed mt-navbar py-6 flex flex-col justify-between pl-[30px] transition-ease-out-500 max-lg:hidden">
       <div className="w-full flex flex-col gap-2">
         <SidebarItem
           index={0}
@@ -52,6 +57,17 @@ const Sidebar = ({ index }: Props) => {
           setActive={setActive}
         />
         <SidebarItem index={2} title="Feedbacks" icon={<Handshake size={24} />} active={active} setActive={setActive} />
+
+        {user.isSuperAdmin && (
+          <SidebarItem
+            index={11}
+            title="Super Admin"
+            icon={<UserCircleGear size={24} />}
+            active={active}
+            setActive={setActive}
+            url="/superadmin"
+          />
+        )}
 
         <div className="text-gray-500 font-medium p-[8.5px] pt-12">Flags</div>
 
@@ -80,7 +96,13 @@ const Sidebar = ({ index }: Props) => {
           setActive={setActive}
         />
         <SidebarItem index={9} title="Polls" icon={<DotsNine size={24} />} active={active} setActive={setActive} />
-        <SidebarItem index={10} title="Comments" icon={<ChatCircle size={24} />} active={active} setActive={setActive} />
+        <SidebarItem
+          index={10}
+          title="Comments"
+          icon={<ChatCircle size={24} />}
+          active={active}
+          setActive={setActive}
+        />
       </div>
 
       <ArrowLineLeft

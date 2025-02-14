@@ -1,25 +1,20 @@
 import Sidebar from '@/components/common/sidebar';
 import BaseWrapper from '@/wrappers/base';
 import MainWrapper from '@/wrappers/main';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AddUserSpecificPosts from '@/sections/superadmin/user_specific_posts';
 import AddUserRandomPosts from '@/sections/superadmin/user_random_posts';
+import ApprovalTokens from '@/sections/superadmin/approval-tokens';
 
 const SuperAdmin = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
     <BaseWrapper>
-      <Sidebar index={-1} />
+      <Sidebar index={11} />
       <MainWrapper>
-        <div className="w-full h-full p-4">
+        <div className="w-full h-full p-4 flex items-center gap-4">
           <DropdownMenu open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DropdownMenuTrigger>
               <Button>Add Posts</Button>
@@ -29,6 +24,7 @@ const SuperAdmin = () => {
               <AddUserRandomPosts />
             </DropdownMenuContent>
           </DropdownMenu>
+          <ApprovalTokens />
         </div>
       </MainWrapper>
     </BaseWrapper>

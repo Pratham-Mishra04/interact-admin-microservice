@@ -79,7 +79,9 @@ const ApprovalTokens = () => {
   return (
     <Dialog>
       <DialogTrigger>
-        <Buildings size={28} />
+        <Button>
+          Organisation Approval Tokens <Buildings size={20} />
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[720px]">
         <DialogHeader>
