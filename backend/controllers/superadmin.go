@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"math/rand"
@@ -25,9 +26,28 @@ func GetOrgApprovalCodes(c *fiber.Ctx) error {
 		return helpers.AppError{Code: 500, Message: config.SERVER_ERROR, LogMessage: err.Error(), Err: err}
 	}
 
+	var formattedResults []fiber.Map
+
+	for key, data := range results {
+		email := key[len("approval-code-"):]
+
+		var code string
+		if err := json.Unmarshal([]byte(data.Value), &code); err != nil {
+			code = data.Value
+		}
+
+		expiryTime := time.Now().Add(data.TTL).Format(time.RFC3339)
+
+		formattedResults = append(formattedResults, fiber.Map{
+			"email":  email,
+			"code":   code,
+			"expiry": expiryTime,
+		})
+	}
+
 	return c.Status(200).JSON(fiber.Map{
 		"status": "success",
-		"codes":  results,
+		"codes":  formattedResults,
 	})
 }
 
@@ -49,6 +69,11 @@ func CreateOrgApprovalCode(c *fiber.Ctx) error {
 	return c.Status(201).JSON(fiber.Map{
 		"status":  "success",
 		"message": "Approval Code Created",
+		"token": fiber.Map{
+			"email":  reqBody.Email,
+			"code":   code,
+			"expiry": time.Now().Add(time.Hour * 24).Format(time.RFC3339),
+		},
 	},
 	)
 }
