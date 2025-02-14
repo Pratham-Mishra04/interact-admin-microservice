@@ -9,6 +9,10 @@ import (
 func SuperuserRouter(app *fiber.App) {
 	superuserRoutes := app.Group("/superuser", middlewares.Protect(true))
 
-	superuserRoutes.Post("/posts/specific", middlewares.Protect(true), controllers.AddUserSpecificPosts)
-	superuserRoutes.Post("/posts/random", middlewares.Protect(true), controllers.AddUserRandomPosts)
+	superuserRoutes.Get("/approval-code", controllers.GetOrgApprovalCodes)
+	superuserRoutes.Post("/approval-code", controllers.CreateOrgApprovalCode)
+	superuserRoutes.Delete("/approval-code/:email", controllers.RemoveOrgApprovalCode)
+
+	superuserRoutes.Post("/posts/specific", controllers.AddUserSpecificPosts)
+	superuserRoutes.Post("/posts/random", controllers.AddUserRandomPosts)
 }

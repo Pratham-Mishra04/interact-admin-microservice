@@ -7,14 +7,69 @@ import (
 	"math/rand"
 	"mime/multipart"
 	"net/http"
+	"time"
 
+	"github.com/Pratham-Mishra04/interact-admin-microservice/cache"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/config"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/helpers"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/initializers"
 	"github.com/Pratham-Mishra04/interact-admin-microservice/models"
+	"github.com/Pratham-Mishra04/interact-admin-microservice/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
+
+func GetOrgApprovalCodes(c *fiber.Ctx) error {
+	results, err := cache.GetAllMatchingKeysWithTTL("approval-code-*")
+	if err != nil {
+		return helpers.AppError{Code: 500, Message: config.SERVER_ERROR, LogMessage: err.Error(), Err: err}
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status": "success",
+		"codes":  results,
+	})
+}
+
+func CreateOrgApprovalCode(c *fiber.Ctx) error {
+	var reqBody struct {
+		Email string `json:"email"`
+	}
+
+	if err := c.BodyParser(&reqBody); err != nil {
+		return &fiber.Error{Code: 400, Message: "Invalid Req Body"}
+	}
+
+	code := utils.GenerateRandomString(12)
+
+	if err := cache.SetToCacheWithCustomTTL(fmt.Sprintf("approval-code-%s", reqBody.Email), code, time.Hour*24); err != nil {
+		return helpers.AppError{Code: 500, Message: config.SERVER_ERROR, LogMessage: err.Error(), Err: err}
+	}
+
+	return c.Status(201).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Approval Code Created",
+	},
+	)
+}
+
+func RemoveOrgApprovalCode(c *fiber.Ctx) error {
+	email := c.Params("email")
+
+	if email == "" {
+		return &fiber.Error{Code: 400, Message: "Invalid Email"}
+	}
+
+	if err := cache.RemoveFromCache(fmt.Sprintf("approval-code-%s", email)); err != nil {
+		return helpers.AppError{Code: 500, Message: config.SERVER_ERROR, LogMessage: err.Error(), Err: err}
+	}
+
+	return c.Status(204).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Removed Approval Code",
+	},
+	)
+}
 
 func AddUserSpecificPosts(c *fiber.Ctx) error {
 	var reqBody struct {
